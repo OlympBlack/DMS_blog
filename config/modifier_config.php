@@ -1,24 +1,23 @@
 <?php
+session_start();
 
-    session_start();
-
-    //refuser l'accès sans être authentifier
-    if(!isset($_SESSION['admin'])){
-        header('Location: login.php');
-    }
-
+// Refuser l'accès sans être authentifié
+if (!isset($_SESSION['admin'])) {
+    header('Location: login.php');
+    exit();
+}
 
 // Connexion à la base
-include('config.php');
+include('config.php'); // Chemin absolu recommandé si ce fichier est dans admin/
 
 $rows = [];
 
+// Récupérer l'article
 if (isset($_GET['id'])) {
     $id = $_GET['id'];
 
-    // Récupérer l'article
-    $req = $bdd->prepare('SELECT * FROM articles WHERE id_article = :id');
-    $req->bindParam(':id', $id);
+    $req = $pdo->prepare('SELECT * FROM articles WHERE id_article = :id');
+    $req->bindParam(':id', $id, PDO::PARAM_INT);
     $req->execute();
     $rows = $req->fetchAll(PDO::FETCH_ASSOC);
 }
@@ -30,23 +29,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET['id'])) {
     $description = htmlspecialchars($_POST['description']);
 
     if (isset($_FILES['media']) && $_FILES['media']['error'] === UPLOAD_ERR_OK) {
-        $mediaName = $_FILES['media']['name'];
-        $mediaTmp = $_FILES['media']['tmp_name'];
-        $mediaDest = 'uploads/' . uniqid() . '_' . basename($mediaName);
+        // Préparer le répertoire cible
+        $uploadDir = realpath(__DIR__ . '/../uploads');
+        if (!$uploadDir) {
+            die("Le dossier d'upload est introuvable.");
+        }
 
-        if (move_uploaded_file($mediaTmp, $mediaDest)) {
-            $update = $bdd->prepare('UPDATE articles SET titre = :titre, description = :description, media = :media WHERE id_article = :id');
+        // Nettoyage du nom du fichier + prévention de conflit
+        $mediaName = uniqid() . '_' . basename($_FILES['media']['name']);
+        $mediaDest = $uploadDir . DIRECTORY_SEPARATOR . $mediaName;
+
+        if (move_uploaded_file($_FILES['media']['tmp_name'], $mediaDest)) {
+            $update = $pdo->prepare('UPDATE articles SET titre = :titre, description = :description, media = :media WHERE id_article = :id');
             $update->execute([
                 ':titre' => $titre,
                 ':description' => $description,
-                ':media' => $mediaDest,
+                ':media' => $mediaName, 
                 ':id' => $id
             ]);
         } else {
             $error = "Erreur lors de l’upload du média.";
         }
     } else {
-        $update = $bdd->prepare('UPDATE articles SET titre = :titre, description = :description WHERE id_article = :id');
+        $update = $pdo->prepare('UPDATE articles SET titre = :titre, description = :description WHERE id_article = :id');
         $update->execute([
             ':titre' => $titre,
             ':description' => $description,

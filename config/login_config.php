@@ -12,7 +12,7 @@
         $pass = $_POST['password'] ?? "";
         
         // Selectionner l'admin dans la base de donnée
-        $req = $conn->prepare("SELECT nom_complet, email, mot_de_pass FROM users");
+        $req = $pdo->prepare("SELECT nom_complet, email, mot_de_pass FROM users");
         $req->execute();
         $admin = $req->fetch(PDO::FETCH_ASSOC);
 

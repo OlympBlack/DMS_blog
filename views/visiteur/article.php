@@ -26,7 +26,7 @@
         <div class="container">
             <div class="d-flex justify-content-between align-items-center w-100">
                 <a href="index.php" class="navbar-brand">DMS</a>
-                <a href="index.php" class="back-btn">
+                <a href="acceuil.php" class="back-btn">
                     <i class="fas fa-arrow-left"></i>
                     <span class="d-none d-sm-inline">Retour</span>
                 </a>
@@ -39,21 +39,23 @@
         <div class="article-container">
             <!-- En-tête avec média -->
             <div class="article-header">
-                <?php 
-                $media_path = htmlspecialchars($article['media']);
-                
-                // Gestion des chemins (même logique que dans index.php)
-                if (!preg_match('/^https?:\/\//', $media_path)) {
-                    if (!str_starts_with($media_path, '/') && !str_starts_with($media_path, './')) {
-                        $media_path = './uploads/' . $media_path;
+                <?php
+                    // Chemin du fichier brut (dans la base)
+                    $media_file = htmlspecialchars($article['media']);
+
+                    // Construire l'URL publique du média
+                    if (preg_match('/^https?:\/\//', $media_file)) {
+                        $media_path = $media_file;
+                    } else {
+                        $media_path = BASE_URL . '/uploads/' . $media_file;
                     }
-                }
-                
-                $file_extension = strtolower(pathinfo($media_path, PATHINFO_EXTENSION));
-                $video_extensions = ['mp4', 'webm', 'ogg', 'avi', 'mov'];
-                $image_extensions = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg'];
+
+                    // Détecter l'extension
+                    $file_extension = strtolower(pathinfo($media_file, PATHINFO_EXTENSION));
+                    $video_extensions = ['mp4', 'webm', 'ogg', 'avi', 'mov'];
+                    $image_extensions = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg'];
                 ?>
-                
+
                 <?php if (in_array($file_extension, $video_extensions)): ?>
                     <video class="article-media" controls muted preload="metadata" playsinline>
                         <source src="<?= $media_path ?>" type="video/<?= $file_extension === 'mov' ? 'mp4' : $file_extension ?>">
@@ -66,10 +68,10 @@
                     </video>
                 <?php elseif (in_array($file_extension, $image_extensions) || empty($file_extension)): ?>
                     <img src="<?= $media_path ?>" 
-                         alt="<?= htmlspecialchars($article['titre']) ?>" 
-                         class="article-media"
-                         loading="lazy"
-                         onerror="this.onerror=null; this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        alt="<?= htmlspecialchars($article['titre']) ?>" 
+                        class="article-media"
+                        loading="lazy"
+                        onerror="this.onerror=null; this.style.display='none'; this.nextElementSibling.style.display='flex';">
                     <div class="media-placeholder" style="display: none;">
                         <div>
                             <i class="fas fa-image" style="font-size: 3rem; margin-bottom: 1rem;"></i>
@@ -84,7 +86,7 @@
                         </div>
                     </div>
                 <?php endif; ?>
-                
+
                 <!-- Overlay avec titre -->
                 <div class="article-overlay">
                     <h1 class="article-title"><?= htmlspecialchars($article['titre']) ?></h1>
@@ -94,6 +96,7 @@
                     </div>
                 </div>
             </div>
+
 
             <!-- Contenu de l'article -->
             <div class="article-content">
@@ -124,32 +127,52 @@
                     <div class="col-12 col-md-4">
                         <a href="article.php?id=<?= $related['id_article'] ?>" class="related-card d-block">
                             <div class="related-media">
-                                <?php 
-                                $related_media = htmlspecialchars($related['media']);
-                                if (!preg_match('/^https?:\/\//', $related_media)) {
-                                    if (!str_starts_with($related_media, '/') && !str_starts_with($related_media, './')) {
-                                        $related_media = '../uploads/' . $related_media;
+                                <?php
+                                    // Assure-toi que BASE_URL est défini dans ton projet (ex: /blog)
+                                    $related_file = htmlspecialchars($related['media']);
+
+                                    if (preg_match('/^https?:\/\//', $related_file)) {
+                                        $related_media = $related_file;
+                                    } else {
+                                        $related_media = BASE_URL . '/uploads/' . ltrim($related_file, '/');
                                     }
-                                }
-                                
-                                $related_extension = strtolower(pathinfo($related_media, PATHINFO_EXTENSION));
+
+                                    $related_extension = strtolower(pathinfo($related_file, PATHINFO_EXTENSION));
+                                    $video_extensions = ['mp4', 'webm', 'ogg', 'avi', 'mov'];
+                                    $image_extensions = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg'];
                                 ?>
-                                
+
                                 <?php if (in_array($related_extension, $video_extensions)): ?>
-                                    <video muted>
-                                        <source src="<?= $related_media ?>" type="video/<?= $related_extension ?>">
+                                    <video muted preload="metadata" playsinline>
+                                        <source src="<?= $related_media ?>" type="video/<?= $related_extension === 'mov' ? 'mp4' : $related_extension ?>">
+                                        <div class="media-placeholder">
+                                            <div>
+                                                <i class="fas fa-video"></i>
+                                                <p>Vidéo non disponible</p>
+                                            </div>
+                                        </div>
                                     </video>
-                                <?php else: ?>
+                                <?php elseif (in_array($related_extension, $image_extensions)): ?>
                                     <img src="<?= $related_media ?>" 
-                                         alt="<?= htmlspecialchars($related['titre']) ?>"
-                                         onerror="this.onerror=null; this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                                        alt="<?= htmlspecialchars($related['titre']) ?>"
+                                        loading="lazy"
+                                        onerror="this.onerror=null; this.style.display='none'; this.nextElementSibling.style.display='flex';">
                                     <div class="media-placeholder" style="display: none;">
                                         <div>
                                             <i class="fas fa-image"></i>
+                                            <p>Image non disponible</p>
+                                        </div>
+                                    </div>
+                                <?php else: ?>
+                                    <div class="media-placeholder">
+                                        <div>
+                                            <i class="fas fa-file"></i>
+                                            <p>Format non supporté</p>
                                         </div>
                                     </div>
                                 <?php endif; ?>
                             </div>
+
                             <div class="related-content">
                                 <h3 class="related-title"><?= htmlspecialchars($related['titre']) ?></h3>
                                 <p class="related-description"><?= htmlspecialchars($related['description']) ?></p>

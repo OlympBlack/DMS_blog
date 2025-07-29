@@ -40,23 +40,27 @@
                 <?php foreach ($articles as $article): ?>
                     <div class="col-12 col-md-6 col-lg-4">
                         <div class="article-card" onclick="window.location.href='article.php?id=<?= $article['id_article'] ?>'" style="cursor: pointer;">
-                            <div class="media-container">
-                                <?php 
-                                $media_path = htmlspecialchars($article['media']);
+                            <?php 
+                                // Constante base URL, définie dans config.php, exemple ici
+                                if (!defined('BASE_URL')) {
+                                    define('BASE_URL', '/blog');  // Modifie selon ta config serveur
+                                }
+
+                                $media_file = htmlspecialchars($article['media']);
                                 
-                                // Vérifier si le chemin commence par http/https ou s'il faut ajouter un dossier
-                                if (!preg_match('/^https?:\/\//', $media_path)) {
-                                    // Si ce n'est pas une URL complète, on assume que c'est dans un dossier local
-                                    if (!str_starts_with($media_path, '/') && !str_starts_with($media_path, './')) {
-                                        $media_path = '../uploads/' . $media_path; // Ajustez le dossier selon votre structure
-                                    }
+                                // Si URL complète
+                                if (preg_match('/^https?:\/\//', $media_file)) {
+                                    $media_path = $media_file;
+                                } else {
+                                    $media_path = BASE_URL . '/uploads/' . $media_file;
                                 }
                                 
-                                $file_extension = strtolower(pathinfo($media_path, PATHINFO_EXTENSION));
+                                $file_extension = strtolower(pathinfo($media_file, PATHINFO_EXTENSION));
                                 $video_extensions = ['mp4', 'webm', 'ogg', 'avi', 'mov'];
                                 $image_extensions = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg'];
-                                ?>
-                                
+                            ?>
+
+                            <div class="media-container">
                                 <?php if (in_array($file_extension, $video_extensions)): ?>
                                     <video controls muted preload="metadata" playsinline>
                                         <source src="<?= $media_path ?>" type="video/<?= $file_extension === 'mov' ? 'mp4' : $file_extension ?>">
@@ -69,9 +73,9 @@
                                     </video>
                                 <?php elseif (in_array($file_extension, $image_extensions) || empty($file_extension)): ?>
                                     <img src="<?= $media_path ?>" 
-                                         alt="<?= htmlspecialchars($article['titre']) ?>" 
-                                         loading="lazy"
-                                         onerror="this.onerror=null; this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                                        alt="<?= htmlspecialchars($article['titre']) ?>" 
+                                        loading="lazy"
+                                        onerror="this.onerror=null; this.style.display='none'; this.nextElementSibling.style.display='flex';">
                                     <div style="display: none; align-items: center; justify-content: center; height: 100%; background: linear-gradient(45deg, #667eea, #764ba2); color: white;">
                                         <div style="text-align: center;">
                                             <i class="fas fa-image" style="font-size: 3rem; margin-bottom: 1rem;"></i>
@@ -90,6 +94,7 @@
                                 <?php endif; ?>
                                 <div class="media-overlay"></div>
                             </div>
+
                             
                             <div class="card-content">
                                 <h3 class="article-title"><?= htmlspecialchars($article['titre']) ?></h3>

@@ -1,4 +1,6 @@
-
+<?php
+ include('../../config/modifier_config.php');
+?>
 
 <!DOCTYPE html>
 <html lang="fr">

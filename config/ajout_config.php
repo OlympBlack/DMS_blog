@@ -40,8 +40,7 @@
             $uploadOk = 0;
         }*/
 
-        // Vérifier si $uploadOk est à 0 à cause d'une erreur
-        $target_dir = "../uploads/";
+        $target_dir = realpath(__DIR__ . '/../uploads') . '/';
         $target_file = $target_dir . basename($_FILES["media"]["name"]);
 
         if ($uploadOk == 0) {
@@ -49,15 +48,16 @@
         } else {
             if (move_uploaded_file($_FILES["media"]["tmp_name"], $target_file)) {
                 $media_name = basename($_FILES["media"]["name"]);
-                $req = $conn->prepare("INSERT INTO articles(media, description, titre) VALUES(?, ?, ?)");
+                $req = $pdo->prepare("INSERT INTO articles(media, description, titre) VALUES(?, ?, ?)");
                 $req->execute([$media_name, $description, $titre]);
                 $success = "Élément ajouté avec succès !";
-                header("Location: dashboard.php");
+                header("Location: ../admin/dashboard.php");
                 exit();
             } else {
                 $error = "Désolé, une erreur est survenue lors du téléversement de votre fichier.";
             }
         }
+
 
     }
 ?>
