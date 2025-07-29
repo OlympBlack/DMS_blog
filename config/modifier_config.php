@@ -9,7 +9,7 @@
 
 
 // Connexion à la base
-include('bdd.php');
+include('config.php');
 
 $rows = [];
 

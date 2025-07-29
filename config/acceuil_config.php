@@ -1,5 +1,5 @@
 <?php
-include('bdd.php');
+include('config.php');
 
 
 // Récupération des articles

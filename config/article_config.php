@@ -1,5 +1,5 @@
 <?php
-include('bdd.php');
+include('config.php');
 
 // Récupérer l'ID de l'article
 $article_id = $_GET['id'] ?? 0;

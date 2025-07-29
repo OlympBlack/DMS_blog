@@ -3,7 +3,7 @@
     session_start();
 
     //Connexion à la base de donnée
-    include('bdd.php');
+    include('config.php');
 
     if($_SERVER['REQUEST_METHOD'] == 'POST'){
         //Récuperer les information entrer dans le formulaire.

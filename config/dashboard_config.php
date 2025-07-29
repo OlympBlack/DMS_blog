@@ -8,14 +8,14 @@
     }
 
     //Connexion à la base de donnée
-   include('bdd.php');
+   include('config.php');
 
     if(isset($_SESSION['admin'])){
         $nomAdmin = $_SESSION['admin'];
     }
 
     // Sélection des données
-    $stmt = $conn->prepare("SELECT * FROM articles  ORDER BY id_article DESC");
+    $stmt = $pdo->prepare("SELECT * FROM articles  ORDER BY id_article DESC");
     $stmt->execute();
     $articles = $stmt->fetchAll(PDO::FETCH_ASSOC);
 

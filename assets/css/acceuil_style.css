@@ -1,0 +1,253 @@
+
+        :root {
+            --primary-color: #667eea;
+            --secondary-color: #764ba2;
+            --accent-color: #f093fb;
+            --dark-color: #2c3e50;
+            --light-color: #ecf0f1;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: var(--dark-color);
+        }
+
+        .header-section {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            padding: 2rem 0;
+            margin-bottom: 3rem;
+        }
+
+        .main-title {
+            font-weight: 700;
+            font-size: 3rem;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-align: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #6c757d;
+            font-size: 1.2rem;
+            font-weight: 300;
+        }
+
+        .whatsapp-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: linear-gradient(45deg, #25d366, #128c7e);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            padding: 15px 25px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            box-shadow: 0 8px 25px rgba(37, 211, 102, 0.4);
+            transition: all 0.3s ease;
+            z-index: 1000;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .whatsapp-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(37, 211, 102, 0.6);
+            color: white;
+        }
+
+        .article-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            transition: all 0.4s ease;
+            overflow: hidden;
+            height: 100%;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            cursor: pointer;
+        }
+
+        .article-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
+        }
+
+        .media-container {
+            position: relative;
+            height: 250px;
+            overflow: hidden;
+            background: linear-gradient(45deg, var(--primary-color), var(--accent-color));
+        }
+
+        .media-container img,
+        .media-container video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.4s ease;
+            background: #000;
+        }
+
+        .media-container video::-webkit-media-controls-panel {
+            background-color: rgba(0, 0, 0, 0.8);
+        }
+
+        .media-placeholder {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            text-align: center;
+        }
+
+        .article-card:hover .media-container img,
+        .article-card:hover .media-container video {
+            transform: scale(1.1);
+        }
+
+        .media-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(to bottom, transparent, rgba(0,0,0,0.3));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .article-card:hover .media-overlay {
+            opacity: 1;
+        }
+
+        .card-content {
+            padding: 1.5rem;
+        }
+
+        .article-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--dark-color);
+            margin-bottom: 0.8rem;
+            line-height: 1.4;
+        }
+
+        .article-description {
+            color: #6c757d;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 1.2rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .like-section {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(0,0,0,0.1);
+        }
+
+        .like-btn {
+            background: none;
+            border: none;
+            color: #6c757d;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            padding: 8px 15px;
+            border-radius: 25px;
+        }
+
+        .like-btn:hover {
+            background: rgba(255, 20, 147, 0.1);
+            color: #ff1493;
+        }
+
+        .like-btn.liked {
+            color: #ff1493;
+            background: rgba(255, 20, 147, 0.1);
+        }
+
+        .like-count {
+            font-weight: 600;
+            color: var(--dark-color);
+        }
+
+        .no-articles {
+            text-align: center;
+            padding: 4rem 0;
+            color: white;
+        }
+
+        .no-articles h3 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            opacity: 0.9;
+        }
+
+        .no-articles p {
+            font-size: 1.1rem;
+            opacity: 0.7;
+        }
+
+        @media (max-width: 768px) {
+            .main-title {
+                font-size: 2rem;
+            }
+            
+            .whatsapp-btn {
+                bottom: 20px;
+                right: 20px;
+                padding: 12px 20px;
+                font-size: 1rem;
+            }
+            
+            .media-container {
+                height: 200px;
+            }
+            
+            .article-title {
+                font-size: 1.1rem;
+            }
+        }
+
+        .loading {
+            opacity: 0.7;
+            pointer-events: none;
+        }
+
+        .pulse {
+            animation: pulse 0.6s ease;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+  
